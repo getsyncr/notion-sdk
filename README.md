@@ -29,7 +29,52 @@ Import and initialize a client using an **integration token** or an OAuth **acce
 import Client from notion
 
 notion = Client(auth="YOUR_ACCESS_TOKEN")
+
+async def fetch_databases() -> None:
+    response = await notion.users.list()
+    for user in response.results:
+        print(user)
 ```
+
+Each method returns a `Coroutine` that have to be awaited to retreive the response.
+
+```python
+>>> await fetch_databases()
+>>> {
+        object: 'user',
+        id: 'd40e767c-d7af-4b18-a86d-55c61f1e39a4',
+        type: 'person',
+        person: {
+            email: 'avo@example.org',
+        },
+        name: 'Avocado Lovelace',
+        avatar_url: 'https://secure.notion-static.com/e6a352a8-8381-44d0-a1dc-9ed80e62b53d.jpg',
+    }
+```
+
+## Client options
+
+`Client` support the following options on initialization.
+These options are all keys in the single constructor parameter.
+
+<!-- markdownlint-disable -->
+| Option | Default value | Type | Description |
+|--------|---------------|---------|-------------|
+| `auth` | `None` | `string` | Bearer token for authentication. If left undefined, the `auth` parameter should be set on each request. |
+| `timeout` | `60` | `int` | Number of seconds to wait before emitting a `RequestTimeoutError` |
+| `base_url` | `"https://api.notion.com"` | `string` | The root URL for sending API requests. This can be changed to test with a mock server. |
+| `logger` | Log to console | `logging.Logger` | A custom logger. |
+<!-- markdownlint-enable -->
+
+## Requirements
+
+This package supports the following minimum versions:
+
+* Python >= 3.7
+* httpx >= 0.15.0
+
+Earlier versions may still work, but we encourage people building new applications
+to upgrade to the current stable.
 
 ## License
 

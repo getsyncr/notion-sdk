@@ -1,0 +1,1 @@
+## 👉 [Please follow one of these issue templates](https://github.com/getsyncr/notion-sdk/issues/new/choose) 👈
