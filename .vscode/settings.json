@@ -1,0 +1,26 @@
+{
+  "files.exclude": {
+    "**/.pytest_cache": true,
+  },
+  "editor.detectIndentation": false,
+  "editor.insertSpaces": true,
+  "editor.formatOnSave": false,
+  "editor.renderWhitespace": "all",
+  "editor.rulers": [
+    100
+  ],
+  "python.pythonPath": "${workspaceRoot}/.venv/bin/python3.9",
+  "python.formatting.provider": "black",
+  "python.formatting.blackPath": "${workspaceRoot}/.venv/bin/black",
+  "python.linting.enabled": true,
+  "python.linting.flake8Enabled": true,
+  "python.linting.flake8Path": "${workspaceRoot}/.venv/bin/flake8",
+  "python.testing.pytestEnabled": true,
+  "python.testing.pytestPath": "${workspaceFolder}/.venv/bin/pytest",
+  "[python]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true
+    }
+  }
+}

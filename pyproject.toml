@@ -1,0 +1,44 @@
+[tool.poetry]
+name = "notion-sdk"
+version = "0.1.0"
+description = "A simple and easy to use Python async client for the Notion API"
+authors = ["Nicolas Lecoy <nicolas@syncr.so>"]
+license = "Apache-2.0"
+readme = "README.md"
+homepage = "https://syncr.so"
+repository = "https://github.com/getsyncr/notion-sdk"
+documentation = "https://getsyncr.github.io/notion-sdk"
+keywords = ["api", "notion", "sdk", "python"]
+packages = [{include = "notion"}]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+httpx = "^0.15.0"
+pydantic = {extras = ["email"], version = "^1.8.2"}
+
+[tool.poetry.dev-dependencies]
+black = "^21.7b0"
+flake8 = "^3.9.2"
+pre-commit = "^2.13.0"
+pytest = "^6.2.4"
+pytest-cov = "^2.12.1"
+isort = "^5.9.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+include = '\.pyi?$'
+exclude = '''
+/(
+  | \.git
+  | \.github
+  | \.venv
+  | \.vscode
+  | build
+  | dist
+  | docs
+)/
+'''
