@@ -15,10 +15,14 @@
     </div>
 </p>
 
+`Notion SDK` is a fully asynchronous & typed Python library to use the Notion API.
+It uses the great [httpx](https://github.com/encode/httpx) as an HTTP client and [pydantic](https://github.com/samuelcolvin/pydantic)
+for data validation and typing. This client is meant to be a Python version of the reference [JavaScript SDK](https://github.com/makenotion/notion-sdk-js), so usage should be pretty similar between both.
+
 ## Installation
 
-```
-pip install notionsdk
+```shell
+$ pip install notion-sdk
 ```
 
 ## Usage
@@ -26,31 +30,24 @@ pip install notionsdk
 Import and initialize a client using an **integration token** or an OAuth **access token**.
 
 ```python
-import Client from notion
+import asyncio
+
+from typing import Union
+
+from notion import Client, BotUser, PersonUser
 
 notion = Client(auth="YOUR_ACCESS_TOKEN")
 
-async def fetch_databases() -> None:
-    response = await notion.users.list()
-    for user in response.results:
-        print(user)
+async def fetch_user(user_id: str) -> Union[BotUser, PersonUser]:
+    return await notion.users.retreive(user_id)
+
+if __name__ == "__main__":
+    asyncio.run(fetch_user("d40e767c-d7af-4b18-a86d-55c61f1e39a4"))
 ```
 
-Each method returns a `Coroutine` that have to be awaited to retreive the response.
+Each method returns a `Coroutine` that have to be awaited to retreive the typed response.
 
-```python
->>> await fetch_databases()
->>> {
-        object: 'user',
-        id: 'd40e767c-d7af-4b18-a86d-55c61f1e39a4',
-        type: 'person',
-        person: {
-            email: 'avo@example.org',
-        },
-        name: 'Avocado Lovelace',
-        avatar_url: 'https://secure.notion-static.com/e6a352a8-8381-44d0-a1dc-9ed80e62b53d.jpg',
-    }
-```
+More example are available in the [examples](examples) folder.
 
 ## Client options
 
@@ -71,7 +68,8 @@ These options are all keys in the single constructor parameter.
 This package supports the following minimum versions:
 
 * Python >= 3.7
-* httpx >= 0.15.0
+* `httpx` >= 0.15.0
+* `pydantic` >= 1.8.2
 
 Earlier versions may still work, but we encourage people building new applications
 to upgrade to the current stable.
