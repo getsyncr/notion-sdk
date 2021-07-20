@@ -35,11 +35,8 @@ class BlocksChildrenEndpoint(Endpoint):
             await self.client.request(
                 path="blocks/{id}/children".format(id=block_id),
                 method="GET",
-                query=pick(
-                    kwargs,
-                    "start_cursor",
-                    "page_size",
-                ),
+                auth=kwargs.get("auth", None),
+                query=pick(kwargs, "start_cursor", "page_size"),
             )
         )
 
@@ -56,10 +53,8 @@ class DatabasesEndpoint(Endpoint):
             await self.client.request(
                 method="POST",
                 path="/databases",
-                query=pick(
-                    kwargs,
-                    "start_cursor",
-                ),
+                auth=kwargs.get("auth", None),
+                query=pick(kwargs, "start_cursor"),
             )
         )
 
@@ -68,11 +63,8 @@ class DatabasesEndpoint(Endpoint):
             await self.client.request(
                 method="GET",
                 path="/databases",
-                query=pick(
-                    kwargs,
-                    "start_cursor",
-                    "page_size",
-                ),
+                auth=kwargs.get("auth", None),
+                query=pick(kwargs, "start_cursor", "page_size"),
             )
         )
 
@@ -81,21 +73,17 @@ class DatabasesEndpoint(Endpoint):
             await self.client.request(
                 method="POST",
                 path="/databases/{id}/query".format(id=database_id),
-                body=pick(
-                    kwargs,
-                    "filter",
-                    "sorts",
-                    "start_cursor",
-                    "page_size",
-                ),
+                auth=kwargs.get("auth", None),
+                body=pick(kwargs, "filter", "sorts", "start_cursor", "page_size"),
             )
         )
 
-    async def retrieve(self, database_id: str) -> Database:
+    async def retrieve(self, database_id: str, **kwargs) -> Database:
         return Database.parse_obj(
             await self.client.request(
                 method="GET",
                 path="/databases/{id}".format(id=database_id),
+                auth=kwargs.get("auth", None),
             )
         )
 
@@ -106,12 +94,8 @@ class PagesEndpoint(Endpoint):
             await self.client.request(
                 method="POST",
                 path="/pages",
-                body=pick(
-                    kwargs,
-                    "parent",
-                    "properties",
-                    "children",
-                ),
+                auth=kwargs.get("auth", None),
+                body=pick(kwargs, "parent", "properties", "children"),
             )
         )
 
@@ -120,6 +104,7 @@ class PagesEndpoint(Endpoint):
             await self.client.request(
                 method="GET",
                 path="pages/{id}".format(id=page_id),
+                auth=kwargs.get("auth", None),
             )
         )
 
@@ -128,49 +113,28 @@ class PagesEndpoint(Endpoint):
             await self.client.request(
                 method="PATCH",
                 path="pages/{id}".format(id=page_id),
-                body=pick(
-                    kwargs,
-                    "archived",
-                    "properties",
-                ),
+                auth=kwargs.get("auth", None),
+                body=pick(kwargs, "archived", "properties"),
             )
         )
 
 
 class UsersEndpoint(Endpoint):
     async def list(self, **kwargs) -> PaginatedList[User]:
-        """
-        Returns a paginated list of `Users` for the workspace.
-        The response may contain fewer that `page_size` of results.
-
-        :params start_cursor: If supplied will return a page of results starting after the cursor provided.
-        If not supplied, this endpoint will return the first page of results.
-
-        :params page_size: The number of items from the full list desired in the response. Maximum: 100
-        """
-
         return PaginatedList[User].parse_obj(
             await self.client.request(
                 method="GET",
                 path="/users",
-                query=pick(
-                    kwargs,
-                    "start_cursor",
-                    "page_size",
-                ),
+                auth=kwargs.get("auth", None),
+                query=pick(kwargs, "start_cursor", "page_size"),
             )
         )
 
-    async def retrieve(self, user_id: str) -> Union[BotUser, PersonUser]:
-        """
-        Retrieves a `User` using the ID specified.
-
-        :params user_id: Identifier for a Notion user
-        """
-
+    async def retrieve(self, user_id: str, **kwargs) -> Union[BotUser, PersonUser]:
         response = await self.client.request(
             method="GET",
             path="/users/{id}".format(id=user_id),
+            auth=kwargs.get("auth", None),
         )
 
         user_type = response.get("type", None)
@@ -188,13 +152,7 @@ class SearchEndpoint(Endpoint):
             await self.client.request(
                 path="/search",
                 method="POST",
-                body=pick(
-                    kwargs,
-                    "query",
-                    "sort",
-                    "filter",
-                    "start_cursor",
-                    "page_size",
-                ),
+                auth=kwargs.get("auth", None),
+                body=pick(kwargs, "query", "sort", "filter", "start_cursor", "page_size"),
             )
         )

@@ -57,10 +57,14 @@ class Client:
         self,
         method: str,
         path: str,
+        auth: Optional[str] = None,
         query: Optional[Dict[Any, Any]] = None,
         body: Optional[Dict[Any, Any]] = None,
     ) -> Response:
-        request = self.client.build_request(method, path, params=query, json=body)
+        headers = Headers()
+        if auth is not None:
+            headers["Authorization"] = "Bearer {token}".format(token=auth)
+        request = self.client.build_request(method, path, params=query, json=body, headers=headers)
         async with self.client as client:
             response = await client.send(request)
         try:
@@ -72,5 +76,5 @@ class Client:
             code = body.get("code", None)
             if is_api_error(code):
                 raise APIResponseError(response, body["message"], code)
-            return HTTPResponseError(err.response)
+            raise HTTPResponseError(err.response)
         return response.json()
