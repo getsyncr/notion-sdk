@@ -149,11 +149,6 @@ class UsersEndpoint(Endpoint):
         :params page_size: The number of items from the full list desired in the response. Maximum: 100
         """
 
-        page_size = kwargs.get("page_size", None)
-        if page_size:
-            page_size = min(100, page_size)
-        kwargs["page_size"] = page_size
-
         return PaginatedList[User].parse_obj(
             await self.client.request(
                 method="GET",
