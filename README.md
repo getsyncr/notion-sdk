@@ -7,9 +7,7 @@
     <div align="center">
         <h1>Notion SDK for Async Python</h1>
         <p>
-            <b>A simple and easy to use Python async client for the 
-            <a href="https://developers.notion.com">Notion API</a> 
-            made with ❤️ by <a href="https://syncr.so">Syncr.so</a></b>
+            <b>A simple and easy to use Python async client for the <a href="https://developers.notion.com">Notion API</a> </b>
         </p>
         <br>
     </div>
@@ -59,7 +57,7 @@ These options are all keys in the single constructor parameter.
 |--------|---------------|---------|-------------|
 | `auth` | `None` | `string` | Bearer token for authentication. If left undefined, the `auth` parameter should be set on each request. |
 | `timeout` | `60` | `int` | Number of seconds to wait before emitting a `RequestTimeoutError` |
-| `base_url` | `"https://api.notion.com"` | `string` | The root URL for sending API requests. This can be changed to test with a mock server. |
+| `base_url` | `"https://api.notion.com/v1/"` | `string` | The root URL for sending API requests. This can be changed to test with a mock server. |
 | `logger` | Log to console | `logging.Logger` | A custom logger. |
 <!-- markdownlint-enable -->
 
@@ -69,7 +67,7 @@ This package supports the following minimum versions:
 
 * Python >= 3.7
 * `httpx` >= 0.15.0
-* `pydantic` >= 1.8.2
+* `pydantic` >= 1.7
 
 Earlier versions may still work, but we encourage people building new applications
 to upgrade to the current stable.
