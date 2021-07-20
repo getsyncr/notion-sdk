@@ -9,6 +9,7 @@ from notion.endpoints import (
     SearchEndpoint,
     UsersEndpoint,
 )
+from notion.errors import APIResponseError, HTTPResponseError, RequestTimeoutError, is_api_error
 
 
 DEFAULT_NOTION_URL = "https://api.notion.com/v1/"
@@ -65,7 +66,11 @@ class Client:
         try:
             response.raise_for_status()
         except TimeoutException:
-            pass
-        except HTTPStatusError:
-            pass
+            raise RequestTimeoutError()
+        except HTTPStatusError as err:
+            body = err.response.json()
+            code = body.get("code", None)
+            if is_api_error(code):
+                raise APIResponseError(response, body["message"], code)
+            return HTTPResponseError(err.response)
         return response.json()
