@@ -483,16 +483,6 @@ class Database(BaseModel):
     properties: Dict[str, Property]
 
 
-class Page(BaseModel):
-    object: str = Field("page", const=True)
-    id: str
-    parent: Union[ParentDatabase, ParentPage, ParentWorkspace]
-    created_time: datetime
-    last_edited_time: datetime
-    archived: bool
-    url: HttpUrl
-
-
 class PropertyValueBase(BaseModel):
     id: str
     type: str
@@ -690,6 +680,17 @@ InputPropertyValueWithRequiredId = TypeVar(
 class PropertyValueWithoutId(Generic[PropertyValue]):
     class Config:
         fields = {"id": {"exclude": True}}
+
+
+class Page(BaseModel):
+    object: str = Field("page", const=True)
+    id: str
+    parent: Union[ParentDatabase, ParentPage, ParentWorkspace]
+    created_time: datetime
+    last_edited_time: datetime
+    archived: bool
+    properties: Dict[str, PropertyValue]
+    url: HttpUrl
 
 
 class TitlePropertySchema(BaseModel):
