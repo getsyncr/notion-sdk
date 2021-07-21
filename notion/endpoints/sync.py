@@ -5,17 +5,17 @@ from notion.types import Block, BotUser, Database, Page, PaginatedList, PersonUs
 
 
 if TYPE_CHECKING:
-    from .client import Client
+    from notion import NotionClient
 
 
 class Endpoint:
-    def __init__(self, client: "Client") -> None:
+    def __init__(self, client: "NotionClient") -> None:
         self.client = client
 
 
 class BlocksChildrenEndpoint(Endpoint):
-    async def append(self, block_id: str, **kwargs) -> Block:
-        response = await self.client.request(
+    def append(self, block_id: str, **kwargs) -> Block:
+        response = self.client.request(
             path="blocks/{id}/children".format(id=block_id),
             method="PATCH",
             body=pick(
@@ -30,9 +30,9 @@ class BlocksChildrenEndpoint(Endpoint):
         else:
             raise ValueError("")
 
-    async def list(self, block_id: str, **kwargs) -> PaginatedList[Block]:
+    def list(self, block_id: str, **kwargs) -> PaginatedList[Block]:
         return PaginatedList[Block].parse_obj(
-            await self.client.request(
+            self.client.request(
                 path="blocks/{id}/children".format(id=block_id),
                 method="GET",
                 auth=kwargs.get("auth", None),
@@ -48,9 +48,9 @@ class BlocksEndpoint(Endpoint):
 
 
 class DatabasesEndpoint(Endpoint):
-    async def create(self, **kwargs) -> Database:
+    def create(self, **kwargs) -> Database:
         return Database.parse_obj(
-            await self.client.request(
+            self.client.request(
                 method="POST",
                 path="/databases",
                 auth=kwargs.get("auth", None),
@@ -58,9 +58,9 @@ class DatabasesEndpoint(Endpoint):
             )
         )
 
-    async def list(self, **kwargs) -> PaginatedList[Database]:
+    def list(self, **kwargs) -> PaginatedList[Database]:
         return PaginatedList[Database].parse_obj(
-            await self.client.request(
+            self.client.request(
                 method="GET",
                 path="/databases",
                 auth=kwargs.get("auth", None),
@@ -68,9 +68,9 @@ class DatabasesEndpoint(Endpoint):
             )
         )
 
-    async def query(self, database_id: str, **kwargs) -> PaginatedList[Page]:
+    def query(self, database_id: str, **kwargs) -> PaginatedList[Page]:
         return PaginatedList[Page].parse_obj(
-            await self.client.request(
+            self.client.request(
                 method="POST",
                 path="/databases/{id}/query".format(id=database_id),
                 auth=kwargs.get("auth", None),
@@ -78,9 +78,9 @@ class DatabasesEndpoint(Endpoint):
             )
         )
 
-    async def retrieve(self, database_id: str, **kwargs) -> Database:
+    def retrieve(self, database_id: str, **kwargs) -> Database:
         return Database.parse_obj(
-            await self.client.request(
+            self.client.request(
                 method="GET",
                 path="/databases/{id}".format(id=database_id),
                 auth=kwargs.get("auth", None),
@@ -89,9 +89,9 @@ class DatabasesEndpoint(Endpoint):
 
 
 class PagesEndpoint(Endpoint):
-    async def create(self, **kwargs) -> Page:
+    def create(self, **kwargs) -> Page:
         return Page.parse_obj(
-            await self.client.request(
+            self.client.request(
                 method="POST",
                 path="/pages",
                 auth=kwargs.get("auth", None),
@@ -99,18 +99,18 @@ class PagesEndpoint(Endpoint):
             )
         )
 
-    async def retrieve(self, page_id: str, **kwargs) -> Page:
+    def retrieve(self, page_id: str, **kwargs) -> Page:
         return Page.parse_obj(
-            await self.client.request(
+            self.client.request(
                 method="GET",
                 path="pages/{id}".format(id=page_id),
                 auth=kwargs.get("auth", None),
             )
         )
 
-    async def update(self, page_id: str, **kwargs) -> Page:
+    def update(self, page_id: str, **kwargs) -> Page:
         return Page.parse_obj(
-            await self.client.request(
+            self.client.request(
                 method="PATCH",
                 path="pages/{id}".format(id=page_id),
                 auth=kwargs.get("auth", None),
@@ -120,9 +120,9 @@ class PagesEndpoint(Endpoint):
 
 
 class UsersEndpoint(Endpoint):
-    async def list(self, **kwargs) -> PaginatedList[User]:
+    def list(self, **kwargs) -> PaginatedList[User]:
         return PaginatedList[User].parse_obj(
-            await self.client.request(
+            self.client.request(
                 method="GET",
                 path="/users",
                 auth=kwargs.get("auth", None),
@@ -130,8 +130,8 @@ class UsersEndpoint(Endpoint):
             )
         )
 
-    async def retrieve(self, user_id: str, **kwargs) -> Union[BotUser, PersonUser]:
-        response = await self.client.request(
+    def retrieve(self, user_id: str, **kwargs) -> Union[BotUser, PersonUser]:
+        response = self.client.request(
             method="GET",
             path="/users/{id}".format(id=user_id),
             auth=kwargs.get("auth", None),
@@ -147,9 +147,9 @@ class UsersEndpoint(Endpoint):
 
 
 class SearchEndpoint(Endpoint):
-    async def __call__(self, **kwargs) -> PaginatedList[Union[Page, Database]]:
+    def __call__(self, **kwargs) -> PaginatedList[Union[Page, Database]]:
         return PaginatedList[Union[Page, Database]].parse_obj(
-            await self.client.request(
+            self.client.request(
                 path="/search",
                 method="POST",
                 auth=kwargs.get("auth", None),
