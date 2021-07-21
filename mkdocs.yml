@@ -7,6 +7,7 @@ theme:
   features:
     - navigation.tabs
     - naviagation.sections
+  favicon: img/favicon.ico
   icon:
     repo: fontawesome/brands/github
   font:
@@ -27,3 +28,6 @@ theme:
       toggle:
         icon: material/lightbulb
         name: Switch to light mode
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences

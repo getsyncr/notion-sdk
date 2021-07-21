@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "notion-sdk"
 version = "0.1.0"
-description = "A simple and easy to use Python async client for the Notion API"
+description = "A simple and easy to use Python client for the Notion API"
 authors = ["Nicolas Lecoy <nicolas@syncr.so>"]
 license = "Apache-2.0"
 readme = "README.md"
