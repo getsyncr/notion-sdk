@@ -10,6 +10,13 @@ from pydantic.networks import EmailStr, HttpUrl
 APISingularObject = TypeVar("APISingularObject")
 
 
+class NotionObjectType(str, Enum):
+    BLOCK = "block"
+    DATABASE = "database"
+    PAGE = "page"
+    USER = "user"
+
+
 class Color(str, Enum):
     BLUE = "blue"
     BROWN = "brown"
@@ -79,7 +86,7 @@ class UserType(str, Enum):
 
 
 class UserBase(BaseModel):
-    object: str = Field("user", const=True)
+    object: str = Field(NotionObjectType.USER, const=True)
     id: str
     type: Optional[str]
     name: str
@@ -179,18 +186,40 @@ RichText = TypeVar("RichText", RichTextText, RichTextMention, RichTextEquation)
 RichTextInput = TypeVar("RichTextInput", RichTextTextInput, RichTextMention, RichTextEquation)
 
 
+class PropertyType(str, Enum):
+    CHECKBOX = "checkbox"
+    CREATED_BY = "created_by"
+    CREATED_TIME = "created_time"
+    DATE = "date"
+    EMAIL = "email"
+    NUMBER = "number"
+    MULTI_SELECT = "multi_select"
+    PHONE_NUMBER = "phone_number"
+    PEOPLE = "people"
+    RICH_TEXT = "rich_text"
+    SELECT = "select"
+    TITLE = "title"
+    FILES = "files"
+    FORMULA = "formula"
+    URL = "url"
+    RELATION = "relation"
+    ROLLUP = "rollup"
+    LAST_EDITED_BY = "last_edited_by"
+    LAST_EDITED_TIME = "last_edited_time"
+
+
 class PropertyBase(BaseModel):
     id: str
     type: str
 
 
 class TitleProperty(PropertyBase):
-    type: str = Field("title", const=True)
+    type: str = Field(PropertyType.TITLE, const=True)
     title: Dict = Field({}, const=True)
 
 
 class RichTextProperty(PropertyBase):
-    type: str = Field("rich_text", const=True)
+    type: str = Field(PropertyType.RICH_TEXT, const=True)
     rich_text: Dict = Field({}, const=True)
 
 
@@ -199,7 +228,7 @@ class Number(BaseModel):
 
 
 class NumberProperty(PropertyBase):
-    type: str = Field("number", const=True)
+    type: str = Field(PropertyType.NUMBER, const=True)
     number: Number
 
 
@@ -228,47 +257,47 @@ class MultiSelect(BaseModel):
 
 
 class SelectProperty(PropertyBase):
-    type: str = Field("select", const=True)
+    type: str = Field(PropertyType.SELECT, const=True)
     select: Select
 
 
 class MultipleSelectProperty(PropertyBase):
-    type: str = Field("multi_select", const=True)
+    type: str = Field(PropertyType.MULTI_SELECT, const=True)
     multi_select: MultiSelect
 
 
 class DateProperty(PropertyBase):
-    type: str = Field("date", const=True)
+    type: str = Field(PropertyType.DATE, const=True)
     date: Dict = Field({}, const=True)
 
 
 class PeopleProperty(PropertyBase):
-    type: str = Field("people", const=True)
+    type: str = Field(PropertyType.PEOPLE, const=True)
     people: Dict = Field({}, const=True)
 
 
 class FilesProperty(PropertyBase):
-    type: str = Field("files", const=True)
+    type: str = Field(PropertyType.FILES, const=True)
     file: Dict = Field({}, const=True)
 
 
 class CheckboxProperty(PropertyBase):
-    type: str = Field("checkbox", const=True)
+    type: str = Field(PropertyType.CHECKBOX, const=True)
     checkbox: Dict = Field({}, const=True)
 
 
 class URLProperty(PropertyBase):
-    type: str = Field("url", const=True)
+    type: str = Field(PropertyType.URL, const=True)
     url: Dict = Field({}, const=True)
 
 
 class EmailProperty(PropertyBase):
-    type: str = Field("email", const=True)
+    type: str = Field(PropertyType.EMAIL, const=True)
     email: Dict = Field({}, const=True)
 
 
 class PhoneNumberProperty(PropertyBase):
-    type: str = Field("phone_number", const=True)
+    type: str = Field(PropertyType.PHONE_NUMBER, const=True)
     phone_number: Dict = Field({}, const=True)
 
 
@@ -277,7 +306,7 @@ class Formula(BaseModel):
 
 
 class FormulaProperty(PropertyBase):
-    type: str = Field("formula", const=True)
+    type: str = Field(PropertyType.FORMULA, const=True)
     formula: Formula
 
 
@@ -288,7 +317,7 @@ class Relation(BaseModel):
 
 
 class RelationProperty(PropertyBase):
-    type: str = Field("relation", const=True)
+    type: str = Field(PropertyType.RELATION, const=True)
     relation: Relation
 
 
@@ -301,27 +330,27 @@ class Rollup(BaseModel):
 
 
 class RollupProperty(PropertyBase):
-    type: str = Field("rollup", const=True)
+    type: str = Field(PropertyType.ROLLUP, const=True)
     rollup: Rollup
 
 
 class CreatedTimeProperty(PropertyBase):
-    type: str = Field("created_time", const=True)
+    type: str = Field(PropertyType.CREATED_TIME, const=True)
     created_time: Dict = Field({}, const=True)
 
 
 class CreatedByProperty(PropertyBase):
-    type: str = Field("created_by", const=True)
+    type: str = Field(PropertyType.CREATED_BY, const=True)
     created_by: Dict = Field({}, const=True)
 
 
 class LastEditedTimeProperty(PropertyBase):
-    type: str = Field("last_edited_time", const=True)
+    type: str = Field(PropertyType.LAST_EDITED_TIME, const=True)
     last_edited_time: Dict = Field({}, const=True)
 
 
 class LastEditedByProperty(PropertyBase):
-    type: str = Field("last_edited_by", const=True)
+    type: str = Field(PropertyType.LAST_EDITED_BY, const=True)
     last_edited_by: Dict = Field({}, const=True)
 
 
@@ -348,8 +377,21 @@ Property = TypeVar(
 )
 
 
+class BlockType(str, Enum):
+    PARAGRAPH = "paragraph"
+    HEADING_ONE = "heading_1"
+    HEADING_TWO = "heading_2"
+    HEADING_THREE = "heading_3"
+    BULLETED_LIST_ITEM = "bulleted_list_item"
+    NUMBERED_LIST_ITEM = "numbered_list_item"
+    TODO = "to_do"
+    TOGGLE = "toggle"
+    CHILD_PAGE = "child_page"
+    UNSUPPORTED = "unsupported"
+
+
 class BlockBase(BaseModel):
-    object: str = Field("block", const=True)
+    object: str = Field(NotionObjectType.BLOCK, const=True)
     id: str
     type: str
     created_time: datetime
@@ -363,7 +405,7 @@ class Paragraph(BaseModel):
 
 
 class ParagraphBlock(BlockBase):
-    type: str = Field("paragraph", const=True)
+    type: str = Field(BlockType.PARAGRAPH, const=True)
     paragraph: Paragraph
 
 
@@ -372,19 +414,19 @@ class Heading(BaseModel):
 
 
 class HeadingOneBlock(BlockBase):
-    type: str = Field("heading_1", const=True)
+    type: str = Field(BlockType.HEADING_ONE, const=True)
     heading_1: Heading
     has_children: bool = Field(False, const=True)
 
 
 class HeadingTwoBlock(BlockBase):
-    type: str = Field("heading_2", const=True)
+    type: str = Field(BlockType.HEADING_TWO, const=True)
     heading_2: Heading
     has_children: bool = Field(False, const=True)
 
 
 class HeadingThreeBlock(BlockBase):
-    type: str = Field("heading_3", const=True)
+    type: str = Field(BlockType.HEADING_THREE, const=True)
     heading_3: Heading
     has_children: bool = Field(False, const=True)
 
@@ -395,7 +437,7 @@ class BulletedListItem(BaseModel):
 
 
 class BulletedListItemBlock(BlockBase):
-    type: str = Field("bulleted_list_item", const=True)
+    type: str = Field(BlockType.BULLETED_LIST_ITEM, const=True)
     bulleted_list_item: BulletedListItem
 
 
@@ -405,7 +447,7 @@ class NumberedListItem(BaseModel):
 
 
 class NumberedListItemBlock(BlockBase):
-    type: str = Field("numbered_list_item", const=True)
+    type: str = Field(BlockType.NUMBERED_LIST_ITEM, const=True)
     numbered_list_item: NumberedListItem
 
 
@@ -416,7 +458,7 @@ class Todo(BaseModel):
 
 
 class ToDoBlock(BlockBase):
-    type: str = Field("to_do", const=True)
+    type: str = Field(BlockType.TODO, const=True)
     to_do: Todo
 
 
@@ -426,7 +468,7 @@ class Toggle(BaseModel):
 
 
 class ToggleBlock(BlockBase):
-    type: str = Field("toggle", const=True)
+    type: str = Field(BlockType.TOGGLE, const=True)
     toggle: Toggle
 
 
@@ -435,12 +477,12 @@ class ChildPage(BaseModel):
 
 
 class ChildPageBlock(BlockBase):
-    type: str = Field("child_page", const=True)
+    type: str = Field(BlockType.CHILD_PAGE, const=True)
     child_page: ChildPage
 
 
 class UnsupportedBlock(BlockBase):
-    type: str = Field("unsupported", const=True)
+    type: str = Field(BlockType.UNSUPPORTED, const=True)
 
 
 Block = TypeVar(
@@ -458,23 +500,29 @@ Block = TypeVar(
 )
 
 
+class ParentType(str, Enum):
+    DATABASE = "database_id"
+    PAGE = "page_id"
+    WORKSPACE = "workspace"
+
+
 class ParentDatabase(BaseModel):
-    type: str = Field("database_id", const=True)
+    type: str = Field(ParentType.DATABASE, const=True)
     database_id: str
 
 
 class ParentPage(BaseModel):
-    type: str = Field("page_id", const=True)
+    type: str = Field(ParentType.PAGE, const=True)
     page_id: str
 
 
 class ParentWorkspace(BaseModel):
-    type: str = Field("workspace", const=True)
+    type: str = Field(ParentType.WORKSPACE, const=True)
     workspace: bool = True
 
 
 class Database(BaseModel):
-    object: str = Field("database", const=True)
+    object: str = Field(NotionObjectType.DATABASE, const=True)
     id: str
     parent: Union[ParentPage, ParentWorkspace]
     created_time: datetime
@@ -483,43 +531,68 @@ class Database(BaseModel):
     properties: Dict[str, Property]
 
 
+class PropertyValueType(str, Enum):
+    ARRAY = "array"
+    BOOLEAN = "boolean"
+    CHECKBOX = "checkbox"
+    CREATED_BY = "created_by"
+    CREATED_TIME = "created_time"
+    DATE = "date"
+    EMAIL = "email"
+    NUMBER = "number"
+    MULTI_SELECT = "multi_select"
+    PHONE_NUMBER = "phone_number"
+    PEOPLE = "people"
+    RICH_TEXT = "rich_text"
+    SELECT = "select"
+    TITLE = "title"
+    FILES = "files"
+    FORMULA = "formula"
+    URL = "url"
+    RELATION = "relation"
+    ROLLUP = "rollup"
+    LAST_EDITED_BY = "last_edited_by"
+    LAST_EDITED_TIME = "last_edited_time"
+    STR = "str"
+
+
 class PropertyValueBase(BaseModel):
     id: str
     type: str
 
 
 class TitlePropertyValue(PropertyValueBase):
-    type: str = Field("title", const=True)
+    type: str = Field(PropertyValueType.TITLE, const=True)
     title: List[RichText]
 
 
 class RichTextPropertyValue(PropertyValueBase):
-    type: str = Field("rich_text", const=True)
+    type: str = Field(PropertyValueType.RICH_TEXT, const=True)
     rich_text: List[RichText]
 
 
 class TitleInputPropertyValue(PropertyValueBase):
-    type: str = Field("title", const=True)
+    type: str = Field(PropertyValueType.TITLE, const=True)
     title: List["RichTextInput"]
 
 
 class RichTextInputPropertyValue(PropertyValueBase):
-    type: str = Field("rich_text", const=True)
+    type: str = Field(PropertyValueType.RICH_TEXT, const=True)
     rich_text: List["RichTextInput"]
 
 
 class NumberPropertyValue(PropertyValueBase):
-    type: str = Field("number", const=True)
+    type: str = Field(PropertyValueType.NUMBER, const=True)
     number: Union[int, float]
 
 
 class SelectPropertyValue(PropertyValueBase):
-    type: str = Field("select", const=True)
+    type: str = Field(PropertyValueType.SELECT, const=True)
     select: SelectOption
 
 
 class MultiSelectPropertyValue(PropertyValueBase):
-    type: str = Field("multi_select", const=True)
+    type: str = Field(PropertyValueType.MULTI_SELECT, const=True)
     multi_select: List[MultiSelectOption]
 
 
@@ -529,57 +602,57 @@ class StartEndDate(BaseModel):
 
 
 class DatePropertyValue(PropertyValueBase):
-    type: str = Field("date", const=True)
+    type: str = Field(PropertyValueType.DATE, const=True)
     date: StartEndDate
 
 
 class StringFormulaValue(BaseModel):
-    type: str = Field("str", const=True)
+    type: str = Field(PropertyValueType.STR, const=True)
     str: Optional[str]
 
 
 class NumberFormulaValue(BaseModel):
-    type: str = Field("number", const=True)
+    type: str = Field(PropertyValueType.NUMBER, const=True)
     number: Optional[Union[int, float]]
 
 
 class BooleanFormulaValue(BaseModel):
-    type: str = Field("boolean", const=True)
+    type: str = Field(PropertyValueType.BOOLEAN, const=True)
     boolean: bool
 
 
 class DateFormulaValue(BaseModel):
-    type: str = Field("date", const=True)
+    type: str = Field(PropertyValueType.DATE, const=True)
     date: DatePropertyValue
 
 
 class FormulaPropertyValue(PropertyValueBase):
-    type: str = Field("formula", const=True)
+    type: str = Field(PropertyValueType.FORMULA, const=True)
     formula: Union[StringFormulaValue, NumberFormulaValue, BooleanFormulaValue, DateFormulaValue]
 
 
 class NumberRollupValue(BaseModel):
-    type: str = Field("number", const=True)
+    type: str = Field(PropertyValueType.NUMBER, const=True)
     number: Union[int, float]
 
 
 class DateRollupValue(BaseModel):
-    type: str = Field("date", const=True)
+    type: str = Field(PropertyValueType.DATE, const=True)
     date: DatePropertyValue
 
 
 class ArrayRollupValue(BaseModel):
-    type: str = Field("array", const=True)
+    type: str = Field(PropertyValueType.ARRAY, const=True)
     array: List["PropertyValueWithoutId"]
 
 
 class RollupPropertyValue(PropertyValueBase):
-    type: str = Field("rollup", const=True)
+    type: str = Field(PropertyValueType.ROLLUP, const=True)
     rollup: Union[NumberRollupValue, DateRollupValue, ArrayRollupValue]
 
 
 class PeoplePropertyValue(PropertyValueBase):
-    type: str = Field("people", const=True)
+    type: str = Field(PropertyValueType.PEOPLE, const=True)
     people: List[User]
 
 
@@ -588,47 +661,47 @@ class FileName(BaseModel):
 
 
 class FilesPropertyValue(PropertyValueBase):
-    type: str = Field("files", const=True)
+    type: str = Field(PropertyValueType.FILES, const=True)
     files: List[FileName]
 
 
 class CheckboxPropertyValue(PropertyValueBase):
-    type: str = Field("checkbox", const=True)
+    type: str = Field(PropertyValueType.CHECKBOX, const=True)
     checkbox: bool
 
 
 class URLPropertyValue(PropertyValueBase):
-    type: str = Field("url", const=True)
+    type: str = Field(PropertyValueType.URL, const=True)
     url: str
 
 
 class EmailPropertyValue(PropertyValueBase):
-    type: str = Field("email", const=True)
+    type: str = Field(PropertyValueType.EMAIL, const=True)
     email: str
 
 
 class PhoneNumberPropertyValue(PropertyValueBase):
-    type: str = Field("phone_number", const=True)
+    type: str = Field(PropertyValueType.PHONE_NUMBER, const=True)
     phone_number: str
 
 
 class CreatedTimePropertyValue(PropertyValueBase):
-    type: str = Field("created_time", const=True)
+    type: str = Field(PropertyValueType.CREATED_TIME, const=True)
     created_time: datetime
 
 
 class CreatedByPropertyValue(PropertyValueBase):
-    type: str = Field("created_by", const=True)
+    type: str = Field(PropertyValueType.CREATED_BY, const=True)
     created_by: User
 
 
 class LastEditedTimePropertyValue(PropertyValueBase):
-    type: str = Field("last_edited_time", const=True)
+    type: str = Field(PropertyValueType.LAST_EDITED_TIME, const=True)
     last_edited_time: datetime
 
 
 class LastEditedByPropertyValue(PropertyValueBase):
-    type: str = Field("last_edited_by", const=True)
+    type: str = Field(PropertyValueType.LAST_EDITED_BY, const=True)
     last_edited_by: User
 
 
@@ -683,7 +756,7 @@ class PropertyValueWithoutId(Generic[PropertyValue]):
 
 
 class Page(BaseModel):
-    object: str = Field("page", const=True)
+    object: str = Field(NotionObjectType.PAGE, const=True)
     id: str
     parent: Union[ParentDatabase, ParentPage, ParentWorkspace]
     created_time: datetime
