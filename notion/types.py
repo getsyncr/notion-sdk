@@ -559,41 +559,41 @@ class PropertyValueType(str, Enum):
 
 class PropertyValueBase(BaseModel):
     id: str
-    type: str
+    type: PropertyValueType
 
 
 class TitlePropertyValue(PropertyValueBase):
-    type: str = Field(PropertyValueType.TITLE, const=True)
+    type: PropertyValueType = Field(PropertyValueType.TITLE, const=True)
     title: List[RichText]
 
 
 class RichTextPropertyValue(PropertyValueBase):
-    type: str = Field(PropertyValueType.RICH_TEXT, const=True)
+    type: PropertyValueType = Field(PropertyValueType.RICH_TEXT, const=True)
     rich_text: List[RichText]
 
 
 class TitleInputPropertyValue(PropertyValueBase):
-    type: str = Field(PropertyValueType.TITLE, const=True)
+    type: PropertyValueType = Field(PropertyValueType.TITLE, const=True)
     title: List["RichTextInput"]
 
 
 class RichTextInputPropertyValue(PropertyValueBase):
-    type: str = Field(PropertyValueType.RICH_TEXT, const=True)
+    type: PropertyValueType = Field(PropertyValueType.RICH_TEXT, const=True)
     rich_text: List["RichTextInput"]
 
 
 class NumberPropertyValue(PropertyValueBase):
-    type: str = Field(PropertyValueType.NUMBER, const=True)
+    type: PropertyValueType = Field(PropertyValueType.NUMBER, const=True)
     number: Union[int, float]
 
 
 class SelectPropertyValue(PropertyValueBase):
-    type: str = Field(PropertyValueType.SELECT, const=True)
+    type: PropertyValueType = Field(PropertyValueType.SELECT, const=True)
     select: SelectOption
 
 
 class MultiSelectPropertyValue(PropertyValueBase):
-    type: str = Field(PropertyValueType.MULTI_SELECT, const=True)
+    type: PropertyValueType = Field(PropertyValueType.MULTI_SELECT, const=True)
     multi_select: List[MultiSelectOption]
 
 
@@ -603,57 +603,57 @@ class StartEndDate(BaseModel):
 
 
 class DatePropertyValue(PropertyValueBase):
-    type: str = Field(PropertyValueType.DATE, const=True)
+    type: PropertyValueType = Field(PropertyValueType.DATE, const=True)
     date: StartEndDate
 
 
 class StringFormulaValue(BaseModel):
-    type: str = Field(PropertyValueType.STR, const=True)
+    type: PropertyValueType = Field(PropertyValueType.STR, const=True)
     str: Optional[str]
 
 
 class NumberFormulaValue(BaseModel):
-    type: str = Field(PropertyValueType.NUMBER, const=True)
+    type: PropertyValueType = Field(PropertyValueType.NUMBER, const=True)
     number: Optional[Union[int, float]]
 
 
 class BooleanFormulaValue(BaseModel):
-    type: str = Field(PropertyValueType.BOOLEAN, const=True)
+    type: PropertyValueType = Field(PropertyValueType.BOOLEAN, const=True)
     boolean: bool
 
 
 class DateFormulaValue(BaseModel):
-    type: str = Field(PropertyValueType.DATE, const=True)
-    date: DatePropertyValue
+    type: PropertyValueType = Field(PropertyValueType.DATE, const=True)
+    date: Optional[DatePropertyValue]
 
 
 class FormulaPropertyValue(PropertyValueBase):
-    type: str = Field(PropertyValueType.FORMULA, const=True)
+    type: PropertyValueType = Field(PropertyValueType.FORMULA, const=True)
     formula: Union[StringFormulaValue, NumberFormulaValue, BooleanFormulaValue, DateFormulaValue]
 
 
 class NumberRollupValue(BaseModel):
-    type: str = Field(PropertyValueType.NUMBER, const=True)
+    type: PropertyValueType = Field(PropertyValueType.NUMBER, const=True)
     number: Union[int, float]
 
 
 class DateRollupValue(BaseModel):
-    type: str = Field(PropertyValueType.DATE, const=True)
+    type: PropertyValueType = Field(PropertyValueType.DATE, const=True)
     date: DatePropertyValue
 
 
 class ArrayRollupValue(BaseModel):
-    type: str = Field(PropertyValueType.ARRAY, const=True)
+    type: PropertyValueType = Field(PropertyValueType.ARRAY, const=True)
     array: List["PropertyValueWithoutId"]
 
 
 class RollupPropertyValue(PropertyValueBase):
-    type: str = Field(PropertyValueType.ROLLUP, const=True)
+    type: PropertyValueType = Field(PropertyValueType.ROLLUP, const=True)
     rollup: Union[NumberRollupValue, DateRollupValue, ArrayRollupValue]
 
 
 class PeoplePropertyValue(PropertyValueBase):
-    type: str = Field(PropertyValueType.PEOPLE, const=True)
+    type: PropertyValueType = Field(PropertyValueType.PEOPLE, const=True)
     people: List[User]
 
 
@@ -662,47 +662,47 @@ class FileName(BaseModel):
 
 
 class FilesPropertyValue(PropertyValueBase):
-    type: str = Field(PropertyValueType.FILES, const=True)
+    type: PropertyValueType = Field(PropertyValueType.FILES, const=True)
     files: List[FileName]
 
 
 class CheckboxPropertyValue(PropertyValueBase):
-    type: str = Field(PropertyValueType.CHECKBOX, const=True)
+    type: PropertyValueType = Field(PropertyValueType.CHECKBOX, const=True)
     checkbox: bool
 
 
 class URLPropertyValue(PropertyValueBase):
-    type: str = Field(PropertyValueType.URL, const=True)
+    type: PropertyValueType = Field(PropertyValueType.URL, const=True)
     url: str
 
 
 class EmailPropertyValue(PropertyValueBase):
-    type: str = Field(PropertyValueType.EMAIL, const=True)
+    type: PropertyValueType = Field(PropertyValueType.EMAIL, const=True)
     email: str
 
 
 class PhoneNumberPropertyValue(PropertyValueBase):
-    type: str = Field(PropertyValueType.PHONE_NUMBER, const=True)
+    type: PropertyValueType = Field(PropertyValueType.PHONE_NUMBER, const=True)
     phone_number: str
 
 
 class CreatedTimePropertyValue(PropertyValueBase):
-    type: str = Field(PropertyValueType.CREATED_TIME, const=True)
+    type: PropertyValueType = Field(PropertyValueType.CREATED_TIME, const=True)
     created_time: datetime
 
 
 class CreatedByPropertyValue(PropertyValueBase):
-    type: str = Field(PropertyValueType.CREATED_BY, const=True)
+    type: PropertyValueType = Field(PropertyValueType.CREATED_BY, const=True)
     created_by: User
 
 
 class LastEditedTimePropertyValue(PropertyValueBase):
-    type: str = Field(PropertyValueType.LAST_EDITED_TIME, const=True)
+    type: PropertyValueType = Field(PropertyValueType.LAST_EDITED_TIME, const=True)
     last_edited_time: datetime
 
 
 class LastEditedByPropertyValue(PropertyValueBase):
-    type: str = Field(PropertyValueType.LAST_EDITED_BY, const=True)
+    type: PropertyValueType = Field(PropertyValueType.LAST_EDITED_BY, const=True)
     last_edited_by: User
 
 
