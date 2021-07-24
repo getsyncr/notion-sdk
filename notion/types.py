@@ -211,6 +211,7 @@ class PropertyType(str, Enum):
 class PropertyBase(BaseModel):
     id: str
     type: str
+    name: str
 
 
 class TitleProperty(PropertyBase):
