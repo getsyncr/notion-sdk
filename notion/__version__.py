@@ -1,6 +1,6 @@
 def get_version():
     try:
-        version = __import__("pkg_resources").get_distribution("cihub").version
+        version = __import__("pkg_resources").get_distribution("notion-sdk").version
     except Exception:
         version = "unknown"
     return version
