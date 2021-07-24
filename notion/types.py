@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from enum import Enum
 from typing import Dict, Generic, List, Optional, TypeVar, Union
 
@@ -598,8 +598,8 @@ class MultiSelectPropertyValue(PropertyValueBase):
 
 
 class StartEndDate(BaseModel):
-    start: datetime
-    end: Optional[datetime]
+    start: date
+    end: Optional[date]
 
 
 class DatePropertyValue(PropertyValueBase):
