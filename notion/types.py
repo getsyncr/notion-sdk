@@ -500,6 +500,19 @@ Block = TypeVar(
     UnsupportedBlock,
 )
 
+BLOCK_MAPPING: Dict[BlockType, Block] = {
+    BlockType.PARAGRAPH: ParagraphBlock,
+    BlockType.HEADING_ONE: HeadingOneBlock,
+    BlockType.HEADING_TWO: HeadingTwoBlock,
+    BlockType.HEADING_THREE: HeadingThreeBlock,
+    BlockType.BULLETED_LIST_ITEM: BulletedListItemBlock,
+    BlockType.NUMBERED_LIST_ITEM: NumberedListItemBlock,
+    BlockType.TODO: ToDoBlock,
+    BlockType.TOGGLE: ToggleBlock,
+    BlockType.CHILD_PAGE: ChildPageBlock,
+    BlockType.UNSUPPORTED: UnsupportedBlock,
+}
+
 
 class ParentType(str, Enum):
     DATABASE = "database_id"

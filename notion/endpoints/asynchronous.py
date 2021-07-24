@@ -1,7 +1,17 @@
 from typing import TYPE_CHECKING, Any, Union
 
 from notion.helpers import pick
-from notion.types import Block, BotUser, Database, Page, PaginatedList, PersonUser, User, UserType
+from notion.types import (
+    BLOCK_MAPPING,
+    Block,
+    BotUser,
+    Database,
+    Page,
+    PaginatedList,
+    PersonUser,
+    User,
+    UserType,
+)
 
 
 if TYPE_CHECKING:
@@ -15,20 +25,16 @@ class AsyncEndpoint:
 
 class BlocksChildrenAsyncEndpoint(AsyncEndpoint):
     async def append(self, block_id: str, **kwargs) -> Block:
-        response = await self.client.request(
+        response: dict = await self.client.request(
             path="blocks/{id}/children".format(id=block_id),
             method="PATCH",
-            body=pick(
-                kwargs,
-                "children",
-            ),
+            body=pick(kwargs, "children"),
         )
 
         block_type = response.get("type", None)
-        if block_type == "":
-            return
-        else:
-            raise ValueError("")
+        if block_type is None or block_type not in BLOCK_MAPPING:
+            raise ValueError("Block type not supported. Check for Notion-SDK updates.")
+        return BLOCK_MAPPING[block_type].parse_obj(response)
 
     async def list(self, block_id: str, **kwargs) -> PaginatedList[Block]:
         return PaginatedList[Block].parse_obj(
