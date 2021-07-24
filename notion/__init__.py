@@ -3,8 +3,8 @@ from notion.errors import APIErrorCode, APIResponseError
 
 
 __all__ = [
+    "APIErrorCode",
+    "APIResponseError",
     "NotionAsyncClient",
     "NotionClient",
-    "ApiErrorCode",
-    "ApiResponseError",
 ]
