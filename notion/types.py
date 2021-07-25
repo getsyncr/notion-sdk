@@ -213,6 +213,18 @@ class PropertyBase(BaseModel):
     type: str
     name: str
 
+    def get_configuration(self) -> Optional["PropertyConfiguration"]:
+        """
+        Returns configuration for given Property
+
+        Utils method to get additional configuration values
+        associated with a Property.
+        Documentation for Property configuration is available here:
+        https://developers.notion.com/reference/database#database-property
+        """
+
+        return getattr(self, str(self.type))
+
 
 class TitleProperty(PropertyBase):
     type: str = Field(PropertyType.TITLE, const=True)
@@ -354,6 +366,10 @@ class LastEditedByProperty(PropertyBase):
     type: str = Field(PropertyType.LAST_EDITED_BY, const=True)
     last_edited_by: Dict = Field({}, const=True)
 
+
+PropertyConfiguration = TypeVar(
+    "PropertyConfiguration", Number, Select, MultiSelect, Formula, Relation, Rollup
+)
 
 Property = TypeVar(
     "Property",
