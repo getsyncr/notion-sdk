@@ -1,15 +1,13 @@
 <p align="center">
-    <p align="center">
-        <a href="https://syncr.so?utm_source=github&utm_medium=logo" target="_blank">
-        <img src="https://user-images.githubusercontent.com/37115765/122721304-ca788c00-d270-11eb-8059-67f8ca53450c.png" alt="Syncr" height="100" width="100">
-        </a>
-    </p>
     <div align="center">
         <h1>Notion SDK for Python</h1>
         <p>
             <b>A simple and easy to use Python client for the <a href="https://developers.notion.com">Notion API</a> </b>
         </p>
-        <br>
+        <a href="https://pypi.org/project/notion-sdk/"><img src="https://badge.fury.io/py/notion-sdk.svg" alt="PyPI version" height="18"></a>
+        <a href="https://github.com/getsyncr/notion-sdk/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License" height="18"></a>
+        <a href="https://pepy.tech/project/notion-sdk"><img alt="Downloads" src="https://pepy.tech/badge/notion-sdk"></a>
+        <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
     </div>
 </p>
 
