@@ -924,3 +924,57 @@ PropertySchema = TypeVar(
     LastEditedTimePropertySchema,
     LastEditedByPropertySchema,
 )
+
+
+class TextContentUpdate(BaseModel):
+    text: List[RichTextInput]
+
+
+class ParagraphUpdateBlock(BaseModel):
+    paragraph: TextContentUpdate
+
+
+class HeadingOneUpdateBlock(BaseModel):
+    heading_1: TextContentUpdate
+
+
+class HeadingTwoUpdateBlock(BaseModel):
+    heading_2: TextContentUpdate
+
+
+class HeadingThreeUpdateBlock(BaseModel):
+    heading_3: TextContentUpdate
+
+
+class BulletedListItemUpdateBlock(BaseModel):
+    bulleted_list_item: TextContentUpdate
+
+
+class NumberedListItemUpdateBlock(BaseModel):
+    numbered_list_item: TextContentUpdate
+
+
+class ToggleUpdateBlock(BaseModel):
+    toggle: TextContentUpdate
+
+
+class TodoUpdate(BaseModel):
+    text: Optional[List[RichTextInput]]
+    checked: Optional[bool]
+
+
+class ToDoUpdateBlock(BaseModel):
+    to_do: TodoUpdate
+
+
+UpdateBlock = TypeVar(
+    "UpdateBlock",
+    ParagraphUpdateBlock,
+    HeadingOneUpdateBlock,
+    HeadingTwoUpdateBlock,
+    HeadingThreeUpdateBlock,
+    BulletedListItemUpdateBlock,
+    NumberedListItemUpdateBlock,
+    ToggleUpdateBlock,
+    ToDoUpdateBlock,
+)

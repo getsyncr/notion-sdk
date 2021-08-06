@@ -1,17 +1,7 @@
 from typing import TYPE_CHECKING, Any, Union
 
-from notion.helpers import pick
-from notion.types import (
-    BLOCK_MAPPING,
-    Block,
-    BotUser,
-    Database,
-    Page,
-    PaginatedList,
-    PersonUser,
-    User,
-    UserType,
-)
+from notion.helpers import parse_block_obj, pick
+from notion.types import Block, BotUser, Database, Page, PaginatedList, PersonUser, User, UserType
 
 
 if TYPE_CHECKING:
@@ -25,16 +15,13 @@ class Endpoint:
 
 class BlocksChildrenEndpoint(Endpoint):
     def append(self, block_id: str, **kwargs) -> Block:
-        response: dict = self.client.request(
-            path="blocks/{id}/children".format(id=block_id),
-            method="PATCH",
-            body=pick(kwargs, "children"),
+        return parse_block_obj(
+            self.client.request(
+                path="blocks/{id}/children".format(id=block_id),
+                method="PATCH",
+                body=pick(kwargs, "children"),
+            )
         )
-
-        block_type = response.get("type", None)
-        if block_type is None or block_type not in BLOCK_MAPPING:
-            raise ValueError("Block type not supported. Please, check notion-sdk updates.")
-        return BLOCK_MAPPING[block_type].parse_obj(response)
 
     def list(self, block_id: str, **kwargs) -> PaginatedList[Block]:
         return PaginatedList[Block].parse_obj(
@@ -51,6 +38,35 @@ class BlocksEndpoint(Endpoint):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.children = BlocksChildrenEndpoint(*args, **kwargs)
+
+    def retrieve(self, block_id: str, **kwargs) -> Block:
+        return parse_block_obj(
+            self.client.request(
+                path="blocks/{id}".format(id=block_id),
+                method="GET",
+                auth=kwargs.get("auth", None),
+            )
+        )
+
+    def update(self, block_id: str, **kwargs):
+        return parse_block_obj(
+            self.client.request(
+                path="blocks/{id}".format(id=block_id),
+                method="PATCH",
+                auth=kwargs.get("auth", None),
+                body=pick(
+                    kwargs,
+                    "paragraph",
+                    "heading_1",
+                    "heading_2",
+                    "heading_3",
+                    "bulleted_list_item",
+                    "numbered_list_item",
+                    "toggle",
+                    "to_do",
+                ),
+            )
+        )
 
 
 class DatabasesEndpoint(Endpoint):
