@@ -87,6 +87,7 @@ class RollupFunction(str, Enum):
     COUNT_UNIQUE_VALUES = "count_unique_values"
     COUNT_EMPTY = "count_empty"
     COUNT_NOT_EMPTY = "count_not_empty"
+    PERCENT_CHECKED = "percent_checked"
     PERCENT_EMPTY = "percent_empty"
     PERCENT_NOT_EMPTY = "percent_not_empty"
     SUM = "sum"
