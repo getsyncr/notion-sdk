@@ -417,6 +417,7 @@ Property = TypeVar(
     CreatedByProperty,
     LastEditedByProperty,
     LastEditedTimeProperty,
+    FormulaProperty,
 )
 
 
