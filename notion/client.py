@@ -28,7 +28,7 @@ from notion.errors import APIResponseError, HTTPResponseError, RequestTimeoutErr
 
 
 DEFAULT_NOTION_URL = "https://api.notion.com/v1/"
-DEFAULT_NOTION_VERSION = "2021-05-13"
+DEFAULT_NOTION_VERSION = "2021-08-02"
 DEFAULT_NOTION_SDK_USER_AGENT = f"notion-sdk/{__version__} (https://github.com/getsyncr/notion-sdk)"
 
 

@@ -14,8 +14,8 @@ class Endpoint:
 
 
 class BlocksChildrenEndpoint(Endpoint):
-    def append(self, block_id: str, **kwargs) -> Block:
-        return parse_block_obj(
+    def append(self, block_id: str, **kwargs) -> PaginatedList[Block]:
+        return PaginatedList[Block].parse_obj(
             self.client.request(
                 path="blocks/{id}/children".format(id=block_id),
                 method="PATCH",
