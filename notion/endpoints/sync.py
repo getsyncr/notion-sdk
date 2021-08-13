@@ -109,6 +109,16 @@ class DatabasesEndpoint(Endpoint):
             )
         )
 
+    def update(self, database_id: str, **kwargs) -> Database:
+        return Database.parse_obj(
+            self.client.request(
+                method="PATCH",
+                path="/databases/{id}".format(id=database_id),
+                auth=kwargs.get("auth", None),
+                body=pick(kwargs, "properties", "title"),
+            )
+        )
+
 
 class PagesEndpoint(Endpoint):
     def create(self, **kwargs) -> Page:

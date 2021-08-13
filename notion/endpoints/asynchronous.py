@@ -109,6 +109,16 @@ class DatabasesAsyncEndpoint(AsyncEndpoint):
             )
         )
 
+    async def update(self, database_id: str, **kwargs) -> Database:
+        return Database.parse_obj(
+            await self.client.request(
+                method="PATCH",
+                path="/databases/{id}".format(id=database_id),
+                auth=kwargs.get("auth", None),
+                body=pick(kwargs, "properties", "title"),
+            )
+        )
+
 
 class PagesAsyncEndpoint(AsyncEndpoint):
     async def create(self, **kwargs) -> Page:
