@@ -76,7 +76,7 @@ class DatabasesAsyncEndpoint(AsyncEndpoint):
                 method="POST",
                 path="/databases",
                 auth=kwargs.get("auth", None),
-                query=pick(kwargs, "start_cursor"),
+                body=pick(kwargs, "parent", "properties", "children"),
             )
         )
 
