@@ -640,12 +640,12 @@ class RichTextInputPropertyValue(PropertyValueBase):
 
 class NumberPropertyValue(PropertyValueBase):
     type: PropertyValueType = Field(PropertyValueType.NUMBER, const=True)
-    number: Union[int, float]
+    number: Optional[Union[int, float]]
 
 
 class SelectPropertyValue(PropertyValueBase):
     type: PropertyValueType = Field(PropertyValueType.SELECT, const=True)
-    select: SelectOption
+    select: Optional[SelectOption]
 
 
 class MultiSelectPropertyValue(PropertyValueBase):
@@ -660,7 +660,7 @@ class StartEndDate(BaseModel):
 
 class DatePropertyValue(PropertyValueBase):
     type: PropertyValueType = Field(PropertyValueType.DATE, const=True)
-    date: StartEndDate
+    date: Optional[StartEndDate]
 
 
 class StringFormulaValue(BaseModel):
@@ -690,12 +690,12 @@ class FormulaPropertyValue(PropertyValueBase):
 
 class NumberRollupValue(BaseModel):
     type: PropertyValueType = Field(PropertyValueType.NUMBER, const=True)
-    number: Union[int, float]
+    number: Optional[Union[int, float]]
 
 
 class DateRollupValue(BaseModel):
     type: PropertyValueType = Field(PropertyValueType.DATE, const=True)
-    date: DatePropertyValue
+    date: Optional[DatePropertyValue]
 
 
 class ArrayRollupValue(BaseModel):
@@ -729,17 +729,17 @@ class CheckboxPropertyValue(PropertyValueBase):
 
 class URLPropertyValue(PropertyValueBase):
     type: PropertyValueType = Field(PropertyValueType.URL, const=True)
-    url: str
+    url: Optional[str]
 
 
 class EmailPropertyValue(PropertyValueBase):
     type: PropertyValueType = Field(PropertyValueType.EMAIL, const=True)
-    email: str
+    email: Optional[str]
 
 
 class PhoneNumberPropertyValue(PropertyValueBase):
     type: PropertyValueType = Field(PropertyValueType.PHONE_NUMBER, const=True)
-    phone_number: str
+    phone_number: Optional[str]
 
 
 class CreatedTimePropertyValue(PropertyValueBase):
