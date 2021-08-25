@@ -76,7 +76,7 @@ class DatabasesEndpoint(Endpoint):
                 method="POST",
                 path="/databases",
                 auth=kwargs.get("auth", None),
-                body=pick(kwargs, "parent", "properties", "children"),
+                body=pick(kwargs, "parent", "properties", "children", "icon", "cover"),
             )
         )
 
@@ -115,7 +115,7 @@ class DatabasesEndpoint(Endpoint):
                 method="PATCH",
                 path="/databases/{id}".format(id=database_id),
                 auth=kwargs.get("auth", None),
-                body=pick(kwargs, "properties", "title"),
+                body=pick(kwargs, "properties", "title", "icon", "cover"),
             )
         )
 
@@ -127,7 +127,7 @@ class PagesEndpoint(Endpoint):
                 method="POST",
                 path="/pages",
                 auth=kwargs.get("auth", None),
-                body=pick(kwargs, "parent", "properties", "children"),
+                body=pick(kwargs, "parent", "properties", "children", "cover", "icon"),
             )
         )
 
@@ -146,7 +146,7 @@ class PagesEndpoint(Endpoint):
                 method="PATCH",
                 path="pages/{id}".format(id=page_id),
                 auth=kwargs.get("auth", None),
-                body=pick(kwargs, "archived", "properties"),
+                body=pick(kwargs, "archived", "properties", "cover", "icon"),
             )
         )
 
