@@ -212,6 +212,42 @@ RichText = TypeVar("RichText", RichTextText, RichTextMention, RichTextEquation)
 RichTextInput = TypeVar("RichTextInput", RichTextTextInput, RichTextMention, RichTextEquation)
 
 
+class _File(BaseModel):
+    url: HttpUrl
+    expiry_time: str
+
+
+class File(BaseModel):
+    type: str = Field("file", const=True)
+    file: _File
+
+
+class FileInput(BaseModel):
+    file: _File
+
+
+class External(BaseModel):
+    url: str
+
+
+class ExternalFile(BaseModel):
+    type: str = Field("external", const=True)
+    external: External
+
+
+class ExternalFileInput(BaseModel):
+    external: External
+
+
+class Emoji(BaseModel):
+    type: str = Field("emoji", const=True)
+    emoji: str
+
+
+class EmojiInput(BaseModel):
+    emoji: str
+
+
 class PropertyType(str, Enum):
     CHECKBOX = "checkbox"
     CREATED_BY = "created_by"
@@ -431,6 +467,12 @@ class BlockType(str, Enum):
     TODO = "to_do"
     TOGGLE = "toggle"
     CHILD_PAGE = "child_page"
+    EMBED = "embed"
+    IMAGE = "image"
+    VIDEO = "video"
+    FILE = "file"
+    PDF = "pdf"
+    AUDIO = "audio"
     UNSUPPORTED = "unsupported"
 
 
@@ -529,6 +571,49 @@ class UnsupportedBlock(BlockBase):
     type: str = Field(BlockType.UNSUPPORTED, const=True)
 
 
+class Embed(BaseModel):
+    url: HttpUrl
+    caption: Optional[List[RichText]]
+
+
+class EmbedBlock(BlockBase):
+    type: str = Field(BlockType.EMBED, const=True)
+    embed: Embed
+
+
+class ExternalFileWithCaption(ExternalFile):
+    caption: Optional[List[RichText]]
+
+
+class FileWithCaption(File):
+    caption: Optional[List[RichText]]
+
+
+class ImageBlock(BlockBase):
+    type: str = Field(BlockType.IMAGE, const=True)
+    image: Union[ExternalFileWithCaption, FileWithCaption]
+
+
+class VideoBlock(BlockBase):
+    type: str = Field(BlockType.VIDEO, const=True)
+    video: Union[ExternalFileWithCaption, FileWithCaption]
+
+
+class FileBlock(BlockBase):
+    type: str = Field(BlockType.FILE, const=True)
+    file: Union[ExternalFileWithCaption, FileWithCaption]
+
+
+class PDFBlock(BlockBase):
+    type: str = Field(BlockType.PDF, const=True)
+    pdf: Union[ExternalFileWithCaption, FileWithCaption]
+
+
+class AudioBlock(BlockBase):
+    type: str = Field(BlockType.PDF, const=True)
+    audio: Union[ExternalFileWithCaption, FileWithCaption]
+
+
 Block = TypeVar(
     "Block",
     ParagraphBlock,
@@ -540,6 +625,12 @@ Block = TypeVar(
     ToDoBlock,
     ToggleBlock,
     ChildPageBlock,
+    EmbedBlock,
+    ImageBlock,
+    VideoBlock,
+    FileBlock,
+    PDFBlock,
+    AudioBlock,
     UnsupportedBlock,
 )
 
@@ -585,6 +676,8 @@ class Database(BaseModel):
     created_time: datetime
     last_edited_time: datetime
     title: List[RichText]
+    icon: Optional[Union[File, ExternalFile, Emoji]]
+    cover: Optional[Union[File, ExternalFile]]
     properties: Dict[str, Property]
 
 
@@ -717,9 +810,13 @@ class FileName(BaseModel):
     name: str
 
 
+class FileWithName(File, ExternalFile):
+    name: str
+
+
 class FilesPropertyValue(PropertyValueBase):
     type: PropertyValueType = Field(PropertyValueType.FILES, const=True)
-    files: List[FileName]
+    files: List[FileWithName]
 
 
 class CheckboxPropertyValue(PropertyValueBase):
@@ -762,6 +859,15 @@ class LastEditedByPropertyValue(PropertyValueBase):
     last_edited_by: User
 
 
+class ExternalFileWithName(ExternalFile):
+    name: str
+
+
+class FilesPropertyInputValue(PropertyValueBase):
+    type: PropertyValueBase = Field(PropertyValueType.FILES)
+    files: List[ExternalFileWithName]
+
+
 PropertyValue = TypeVar(
     "PropertyValue",
     TitlePropertyValue,
@@ -782,6 +888,7 @@ PropertyValue = TypeVar(
     CreatedByPropertyValue,
     LastEditedTimePropertyValue,
     LastEditedByPropertyValue,
+    FilesPropertyInputValue,
 )
 
 InputPropertyValueWithRequiredId = TypeVar(
@@ -819,6 +926,8 @@ class Page(BaseModel):
     created_time: datetime
     last_edited_time: datetime
     archived: bool
+    icon: Optional[Union[File, ExternalFile, Emoji]]
+    cover: Optional[Union[File, ExternalFile]]
     properties: Dict[str, PropertyValue]
     url: HttpUrl
 
