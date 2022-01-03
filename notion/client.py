@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional, Union, TypeVar, Type
 
 from httpx import (
     URL,
@@ -31,11 +31,12 @@ DEFAULT_NOTION_URL = "https://api.notion.com/v1/"
 DEFAULT_NOTION_VERSION = "2021-08-16"
 DEFAULT_NOTION_SDK_USER_AGENT = f"notion-sdk/{__version__} (https://github.com/getsyncr/notion-sdk)"
 
+_HttpClientType = TypeVar("_HttpClientType", Client, AsyncClient)
+
 
 class BaseClient:
     def __init__(
         self,
-        client: Union[Client, AsyncClient],
         auth: Optional[str] = None,
         timeout: int = 60,
         base_url: str = DEFAULT_NOTION_URL,
@@ -50,22 +51,9 @@ class BaseClient:
         self.notion_version = notion_version
         self.user_agent = user_agent
 
-        self.client: Union[Client, AsyncClient] = client(
-            base_url=self.base_url,
-            timeout=self.timeout,
-            headers=Headers(
-                {
-                    "Notion-Version": self.notion_version,
-                    "User-Agent": self.user_agent,
-                }
-            ),
-        )
-
-        if self.auth:
-            self.client.headers["Authorization"] = "Bearer {token}".format(token=self.auth)
-
     def _build_request(
         self,
+        client: Union[Client, AsyncClient],
         method: str,
         path: str,
         query: Optional[Dict[Any, Any]] = None,
@@ -75,7 +63,7 @@ class BaseClient:
         headers = Headers()
         if auth is not None:
             headers["Authorization"] = "Bearer {token}".format(token=auth)
-        return self.client.build_request(method, path, params=query, json=body, headers=headers)
+        return client.build_request(method, path, params=query, json=body, headers=headers)
 
     def _parse_response(self, response: Response) -> Any:
         try:
@@ -90,6 +78,23 @@ class BaseClient:
             raise HTTPResponseError(err.response)
         return response.json()
 
+    def _create_http_client(self, client_factory: Type[_HttpClientType]) -> _HttpClientType:
+        client = client_factory(
+            base_url=self.base_url,
+            timeout=self.timeout,
+            headers=Headers(
+                {
+                    "Notion-Version": self.notion_version,
+                    "User-Agent": self.user_agent,
+                }
+            ),
+        )
+
+        if self.auth:
+            client.headers["Authorization"] = "Bearer {token}".format(token=self.auth)
+
+        return client
+
 
 class NotionClient(BaseClient):
     def __init__(
@@ -101,13 +106,13 @@ class NotionClient(BaseClient):
         user_agent: str = DEFAULT_NOTION_SDK_USER_AGENT,
     ) -> None:
         super().__init__(
-            Client,
             auth=auth,
             timeout=timeout,
             base_url=base_url,
             notion_version=notion_version,
             user_agent=user_agent,
         )
+        self.http_client = self._create_http_client(Client)
 
         self.blocks = BlocksEndpoint(self)
         self.databases = DatabasesEndpoint(self)
@@ -122,9 +127,11 @@ class NotionClient(BaseClient):
         auth: Optional[str] = None,
         query: Optional[Dict[Any, Any]] = None,
         body: Optional[Dict[Any, Any]] = None,
-    ) -> Response:
-        request = self._build_request(method, path, query=query, body=body, auth=auth)
-        response = self.client.send(request)
+    ) -> Any:
+        request = self._build_request(
+            self.http_client, method, path, query=query, body=body, auth=auth
+        )
+        response = self.http_client.send(request)
         return self._parse_response(response)
 
 
@@ -138,7 +145,6 @@ class NotionAsyncClient(BaseClient):
         user_agent: str = DEFAULT_NOTION_SDK_USER_AGENT,
     ) -> None:
         super().__init__(
-            AsyncClient,
             auth=auth,
             timeout=timeout,
             base_url=base_url,
@@ -159,8 +165,8 @@ class NotionAsyncClient(BaseClient):
         auth: Optional[str] = None,
         query: Optional[Dict[Any, Any]] = None,
         body: Optional[Dict[Any, Any]] = None,
-    ) -> Response:
-        request = self._build_request(method, path, query=query, body=body, auth=auth)
-        async with self.client as client:
+    ) -> Any:
+        async with self._create_http_client(AsyncClient) as client:
+            request = self._build_request(client, method, path, query=query, body=body, auth=auth)
             response = await client.send(request)
         return self._parse_response(response)
