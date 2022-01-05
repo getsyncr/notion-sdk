@@ -132,7 +132,12 @@ class PersonUser(UserBase):
     person: Optional[Person]
 
 
-User = TypeVar("User", BotUser, PersonUser)
+class UserRef(BaseModel):
+    object: str = Field(NotionObjectType.USER, const=True)
+    id: str
+
+
+User = TypeVar("User", BotUser, PersonUser, UserRef)
 
 
 class Annotations(BaseModel):
