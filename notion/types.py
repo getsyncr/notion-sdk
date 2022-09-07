@@ -752,8 +752,8 @@ class MultiSelectPropertyValue(PropertyValueBase):
 
 
 class StartEndDate(BaseModel):
-    start: date
-    end: Optional[date]
+    start: datetime
+    end: Optional[datetime]
 
 
 class DatePropertyValue(PropertyValueBase):
