@@ -819,11 +819,6 @@ class FileWithName(File, ExternalFile):
     name: str
 
 
-class FilesPropertyValue(PropertyValueBase):
-    type: PropertyValueType = Field(PropertyValueType.FILES, const=True)
-    files: List[Union[FileWithName, ExternalFileWithName]]
-
-
 class CheckboxPropertyValue(PropertyValueBase):
     type: PropertyValueType = Field(PropertyValueType.CHECKBOX, const=True)
     checkbox: bool
@@ -866,6 +861,11 @@ class LastEditedByPropertyValue(PropertyValueBase):
 
 class ExternalFileWithName(ExternalFile):
     name: str
+
+
+class FilesPropertyValue(PropertyValueBase):
+    type: PropertyValueType = Field(PropertyValueType.FILES, const=True)
+    files: List[Union[FileWithName, ExternalFileWithName]]
 
 
 class FilesPropertyInputValue(PropertyValueBase):
