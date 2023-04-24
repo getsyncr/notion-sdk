@@ -821,7 +821,7 @@ class FileWithName(File, ExternalFile):
 
 class FilesPropertyValue(PropertyValueBase):
     type: PropertyValueType = Field(PropertyValueType.FILES, const=True)
-    files: List[FileWithName]
+    files: List[Union[FileWithName, ExternalFileWithName]]
 
 
 class CheckboxPropertyValue(PropertyValueBase):
